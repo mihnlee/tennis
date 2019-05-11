@@ -1,0 +1,74 @@
+<html>
+    <canvas id="canvas">
+
+    </canvas>
+    <script>
+        let canvas = document.getElementById("canvas");
+        let context = canvas.getContext('2d');
+        let width = canvas.width = 800;
+        let height = canvas.height = 600;
+        let ballX = 400;
+        let ballY = 300;
+        let ballSpeedY = 15;
+        let ballSpeedX = 15;
+        const FPS = 1000 / 30;
+        let paddleWidth = 20;
+        let paddleHeight = 100;
+        let paddleY = 300;
+
+        function moveBall(){
+            
+            if(ballX > width || ballX < 0){
+                ballSpeedX *= -1;
+            }
+            
+            if(ballY > height || ballY < 0){
+                ballSpeedY *= -1;
+            }
+
+            ballX += ballSpeedX;
+            ballY += ballSpeedY;
+        }
+
+        function drawRect(startX, startY, width, height, color){
+            context.fillStyle = color;
+            context.fillRect(startX, startY, width, height);
+        }
+
+function drawCircle(centerX, centerY, radius, color) {
+    context.fillStyle = color;
+    context.beginPath();
+    context.arc(centerX, centerY, radius, 0, Math.PI * 2, true);
+    context.fill();
+}
+
+function updateAll() {
+    drawRect(0, 0, width, height,'green');
+    drawRect(10, paddleY, paddleWidth, paddleHeight, 'red');
+            drawCircle(ballX, ballY, 10, 'white');
+            moveBall();
+}
+
+function calculateMousePosition(event) {
+let rect = canvas.getBoundingClientRect(), root = document.documentElement;
+
+let mouseX = event.clientX - rect.left - root.scrollLeft;
+let mouseY = event.clientY - rect.top - root.scrollTop;
+return{
+    x: mouseX,
+    y: mouseY
+    };
+}
+   
+    window.onload = function() {
+        console.log(canvas);
+        setInterval(function(){updateAll()}, FPS);   
+
+        canvas.addEventListener('mousemove', function(event){
+            let mousePosition = calculateMousePosition(event);
+            paddleY = mousePosition.y;
+        })
+    }
+</script>
+
+</html>
