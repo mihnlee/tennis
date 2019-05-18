@@ -14,26 +14,56 @@
         const FPS = 1000 / 30;
         let paddleWidth = 20;
         let paddleHeight = 100;
-        let paddleY = 300;
+        let paddle1Y = 250;
+        let paddle2Y = 250
+        let paddleX = 10;
+
+function ballReset(){
+    ballSpeedX = -ballSpeedX;
+    ballX = width/2;
+    ballY = height/2;
+}
 
         function moveBall(){
-            
-            if(ballX > width || ballX < 0){
-                ballSpeedX *= -1;
-            }
-            
-            if(ballY > height || ballY < 0){
-                ballSpeedY *= -1;
-            }
+            ballX = ballX + ballSpeedX;
+            ballY = ballY + ballSpeedY;
+        if(ballX < 10) {
+            if(ballY > paddle1Y &&
+                ballY < paddle1Y + paddleHeight * 2){
+                    ballSpeedX = -ballSpeedX;
+                } else{
+                    ballReset();
+                }
+        }    
+           if(ballX > width) {
+            if(ballY > paddle2Y &&
+                ballY < paddle2Y + paddleHeight * 2){
+                    ballSpeedX = -ballSpeedX;
+                } else{
+                    ballReset();
+                }
+        }
+        if(ballY < 0){
+             ballSpeedY = -ballSpeedY;
 
-            ballX += ballSpeedX;
-            ballY += ballSpeedY;
+        }
+        if(ballY > height){
+             ballSpeedY = -ballSpeedY;}
         }
 
         function drawRect(startX, startY, width, height, color){
             context.fillStyle = color;
             context.fillRect(startX, startY, width, height);
         }
+
+function computerMovement() {
+    let paddle2YCenter = paddle2Y + (paddleHeight/2);
+    if(paddle2YCenter < ballY - 10) {
+        paddle2Y = paddle2Y + 6;
+    } else if(paddle2YCenter > ballY + 10) {
+        paddle2Y = paddle2Y - 6;
+    }
+}
 
 function drawCircle(centerX, centerY, radius, color) {
     context.fillStyle = color;
@@ -44,8 +74,10 @@ function drawCircle(centerX, centerY, radius, color) {
 
 function updateAll() {
     drawRect(0, 0, width, height,'green');
-    drawRect(10, paddleY, paddleWidth, paddleHeight, 'red');
+    drawRect(10, paddle1Y, paddleWidth, paddleHeight, 'red');
+    drawRect(790, paddle2Y, paddleWidth, paddleHeight, 'red');
             drawCircle(ballX, ballY, 10, 'white');
+            computerMovement();
             moveBall();
 }
 
@@ -66,7 +98,7 @@ return{
 
         canvas.addEventListener('mousemove', function(event){
             let mousePosition = calculateMousePosition(event);
-            paddleY = mousePosition.y;
+            paddle1Y = mousePosition.y;
         })
     }
 </script>
